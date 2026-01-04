@@ -1,1 +1,82 @@
-__pycache__
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+*.pyo
+
+# Virtual Environment
+ompar_env/
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model Files (Large files - download separately)
+model/model.bin
+model/data/
+model/data.pkl
+model/version
+
+# HuggingFace Cache
+.cache/
+*.safetensors
+
+# Parser compiled files
+parser/my-languages.so
+parser/vendor/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+convert_model.py
+requirements_temp.txt
+cleanup.sh
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Git
+*.orig
+
+# Backup files
+*.bak
+*~
+*.swp
+*.swo
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
