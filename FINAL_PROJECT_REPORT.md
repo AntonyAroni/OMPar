@@ -22,23 +22,24 @@ El sistema opera mediante un pipeline secuencial de tres etapas críticas, cada 
 
 ```mermaid
 graph TD
-    Input[Código Fuente C/C++] --> A
+    Input["Código Fuente C/C++"] --> A
+
     subgraph "Etapa 1: Análisis Estático (CPU)"
-        A[Parser & DFG Extractor] -->|AST + Data Flow| B(Representación Intermedia)
+        A["Parser & DFG Extractor"] -->|AST + Data Flow| B["Representación Intermedia"]
         style A fill:#ff9900,stroke:#333,stroke-width:2px
     end
-    
+
     subgraph "Etapa 2: Inteligencia Artificial (GPU)"
         B --> C{OMPify: Clasificador}
-        C -->|Serial| End[Fin (No Paralelizable)]
-        C -->|Paralelizable| D[MonoCoder: Generador]
+        C -->|Serial| End["Fin - No Paralelizable"]
+        C -->|Paralelizable| D["MonoCoder: Generador"]
         style C fill:#99ccff,stroke:#333
         style D fill:#66ff66,stroke:#333,stroke-width:2px
     end
-    
+
     subgraph "Etapa 3: Post-Procesamiento"
-        D -->|Tokens| E[Decodificador & Formateador]
-        E --> Output[Código Paralelizado #pragma omp]
+        D -->|Tokens| E["Decodificador & Formateador"]
+        E --> Output["Código Paralelizado #pragma omp"]
     end
 ```
 
