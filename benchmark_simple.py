@@ -16,7 +16,7 @@ from compAI import OMPAR
 
 
 class SimpleBenchmark:
-    def __init__(self, model_path: str, device: str, args):
+    def __init__(self, model_path: str, device: str, args, use_tensorrt=False):
         self.device = device
         self.results = {
             'timestamp': datetime.now().isoformat(),
@@ -29,7 +29,7 @@ class SimpleBenchmark:
         # Medir tiempo de inicialización
         print("⏱️  Midiendo tiempo de inicialización del modelo...")
         start = time.perf_counter()
-        self.ompar = OMPAR(model_path=model_path, device=device, args=args)
+        self.ompar = OMPAR(model_path=model_path, device=device, args=args, use_tensorrt=use_tensorrt)
         init_time = time.perf_counter() - start
         
         self.results['initialization_time_ms'] = init_time * 1000
@@ -276,6 +276,8 @@ def main():
                        help='Archivo de salida para resultados')
     parser.add_argument('--baseline', default=None,
                        help='Archivo baseline para comparación')
+    parser.add_argument('--use_tensorrt', action='store_true',
+                        help='Usar optimización TensorRT')
     parser.add_argument('--save-baseline', action='store_true',
                        help='Guardar resultados como baseline')
     
@@ -289,10 +291,11 @@ def main():
     print(f"Dispositivo: {device}")
     print(f"PyTorch: {torch.__version__}")
     print(f"Iteraciones: {args.iterations}")
+    print(f"TensorRT: {'Activado' if args.use_tensorrt else 'Desactivado'}")
     print("="*80 + "\n")
     
     # Inicializar benchmark
-    benchmark = SimpleBenchmark(args.model_weights, device, args)
+    benchmark = SimpleBenchmark(args.model_weights, device, args, use_tensorrt=args.use_tensorrt)
     
     # Casos de prueba (solo códigos simples que funcionan)
     test_cases = [
