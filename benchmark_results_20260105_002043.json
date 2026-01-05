@@ -1,0 +1,176 @@
+{
+  "timestamp": "2026-01-05T00:20:28.269594",
+  "device": "cuda",
+  "pytorch_version": "2.5.1+cu121",
+  "cuda_available": true,
+  "benchmarks": [
+    {
+      "name": "Simple loop",
+      "iterations": 5,
+      "code_length": 47,
+      "times": {
+        "mean_ms": 28.90299420014344,
+        "median_ms": 28.70615100073337,
+        "min_ms": 22.477847000118345,
+        "max_ms": 34.35508399979881,
+        "stdev_ms": 4.552985740396651,
+        "p95_ms": 34.35508399979881,
+        "p99_ms": 34.35508399979881
+      },
+      "components": {
+        "classification_ms": {
+          "mean_ms": 28.103037199980463,
+          "min_ms": 24.84316200025205,
+          "max_ms": 31.951179000316188
+        },
+        "generation_ms": {
+          "mean_ms": 0,
+          "min_ms": 0,
+          "max_ms": 0
+        },
+        "formatting_ms": {
+          "mean_ms": 0,
+          "min_ms": 0,
+          "max_ms": 0
+        },
+        "total_ms": {
+          "mean_ms": 28.103037199980463,
+          "min_ms": 24.84316200025205,
+          "max_ms": 31.951179000316188
+        }
+      },
+      "throughput": {
+        "iterations_per_second": 34.598491529124594,
+        "ms_per_iteration": 28.90299420014344
+      }
+    },
+    {
+      "name": "Reduction",
+      "iterations": 5,
+      "code_length": 52,
+      "times": {
+        "mean_ms": 370.3962183999465,
+        "median_ms": 370.4273749999629,
+        "min_ms": 368.2652229999803,
+        "max_ms": 373.10059500032366,
+        "stdev_ms": 1.7712945546178729,
+        "p95_ms": 373.10059500032366,
+        "p99_ms": 373.10059500032366
+      },
+      "components": {
+        "classification_ms": {
+          "mean_ms": 24.314695999964897,
+          "min_ms": 23.801820999324264,
+          "max_ms": 24.798987999929523
+        },
+        "generation_ms": {
+          "mean_ms": 346.38155680004274,
+          "min_ms": 344.54740999990463,
+          "max_ms": 349.0543779998916
+        },
+        "formatting_ms": {
+          "mean_ms": 0.0034540002161520533,
+          "min_ms": 0.0030350001907208934,
+          "max_ms": 0.003953000486944802
+        },
+        "total_ms": {
+          "mean_ms": 370.6997068002238,
+          "min_ms": 368.6279399998966,
+          "max_ms": 373.26975199994195
+        }
+      },
+      "throughput": {
+        "iterations_per_second": 2.6998115810140906,
+        "ms_per_iteration": 370.3962183999465
+      }
+    },
+    {
+      "name": "Array copy",
+      "iterations": 5,
+      "code_length": 53,
+      "times": {
+        "mean_ms": 344.4127427999774,
+        "median_ms": 344.6493120000014,
+        "min_ms": 343.11235199947987,
+        "max_ms": 345.4234210003051,
+        "stdev_ms": 0.9333422391667533,
+        "p95_ms": 345.4234210003051,
+        "p99_ms": 345.4234210003051
+      },
+      "components": {
+        "classification_ms": {
+          "mean_ms": 24.912705199858465,
+          "min_ms": 24.223003999395587,
+          "max_ms": 25.243336000130512
+        },
+        "generation_ms": {
+          "mean_ms": 320.52228919983463,
+          "min_ms": 318.41724700007035,
+          "max_ms": 322.1603980000509
+        },
+        "formatting_ms": {
+          "mean_ms": 0.003344400283822324,
+          "min_ms": 0.0030710007195011713,
+          "max_ms": 0.0035069997466052882
+        },
+        "total_ms": {
+          "mean_ms": 345.4383387999769,
+          "min_ms": 343.66371400119533,
+          "max_ms": 347.40680500090093
+        }
+      },
+      "throughput": {
+        "iterations_per_second": 2.903493035333957,
+        "ms_per_iteration": 344.4127427999774
+      }
+    },
+    {
+      "name": "Element-wise",
+      "iterations": 5,
+      "code_length": 60,
+      "times": {
+        "mean_ms": 300.54752839987486,
+        "median_ms": 300.11771399949794,
+        "min_ms": 299.2829029999484,
+        "max_ms": 302.5528130001476,
+        "stdev_ms": 1.2380840396410675,
+        "p95_ms": 302.5528130001476,
+        "p99_ms": 302.5528130001476
+      },
+      "components": {
+        "classification_ms": {
+          "mean_ms": 25.000181600080396,
+          "min_ms": 24.353748000066844,
+          "max_ms": 25.652813999840873
+        },
+        "generation_ms": {
+          "mean_ms": 274.5365238000886,
+          "min_ms": 273.72437699978036,
+          "max_ms": 275.07468499970855
+        },
+        "formatting_ms": {
+          "mean_ms": 0.003149800068058539,
+          "min_ms": 0.002958000550279394,
+          "max_ms": 0.0034120002965210006
+        },
+        "total_ms": {
+          "mean_ms": 299.53985520023707,
+          "min_ms": 298.4312359994874,
+          "max_ms": 300.2065850005238
+        }
+      },
+      "throughput": {
+        "iterations_per_second": 3.3272607674534327,
+        "ms_per_iteration": 300.54752839987486
+      }
+    }
+  ],
+  "initialization_time_ms": 3315.4955030004203,
+  "batch_benchmark": {
+    "batch_size": 4,
+    "successful": 4,
+    "total_time_ms": 661.9894460000069,
+    "avg_time_per_item_ms": 165.49736150000172,
+    "throughput_items_per_second": 6.042392403941677
+  }
+}

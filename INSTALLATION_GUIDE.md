@@ -108,7 +108,7 @@ pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pyt
 
 ```bash
 # Instalar paquetes principales
-pip install transformers datasets tokenizers huggingface_hub safetensors tqdm requests pyyaml regex
+pip install transformers datasets tokenizers huggingface_hub safetensors tqdm requests pyyaml regex nvidia-tensorrt
 
 # Instalar tree-sitter versión específica
 pip install tree-sitter==0.20.4
@@ -191,6 +191,23 @@ Loading model from model...
 ```bash
 ls -lh model/model.bin
 # Salida esperada: -rw-rw-r-- ... 477M ... model.bin
+```
+
+### (Opcional) Generación de Engine TensorRT
+
+Para habilitar la aceleración máxima (Fase 3), debes generar el motor de TensorRT. Esto creará un archivo optimizado para tu GPU específica.
+
+```bash
+# Ejecutar conversión a TensorRT (requiere GPU NVIDIA)
+python cpp_extensions/monocoder_tensorrt/convert_to_trt.py
+```
+
+**Salida esperada:**
+```
+🚀 CONVERTIR MONOCODER A TENSORRT (FIXED SHAPE)
+...
+✅ Engine TensorRT guardado: cpp_extensions/monocoder_tensorrt/monocoder_fixed.engine
+✅ Inferencia exitosa!
 ```
 
 ---
@@ -522,7 +539,7 @@ python3 -m venv ompar_env
 source ompar_env/bin/activate
 pip install --upgrade pip
 pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-pip install transformers datasets tokenizers huggingface_hub safetensors tqdm requests pyyaml regex tree-sitter==0.20.4
+pip install transformers datasets tokenizers huggingface_hub safetensors tqdm requests pyyaml regex tree-sitter==0.20.4 nvidia-tensorrt
 
 # Compilar parser
 cd parser
@@ -533,6 +550,9 @@ cd ..
 
 # Convertir modelo (después de descargar pesos)
 python convert_model.py
+
+# (Opcional) Generar Engine TensorRT para máximo rendimiento
+python cpp_extensions/monocoder_tensorrt/convert_to_trt.py
 
 # Ejecutar
 python run_ompar.py --model_weights model

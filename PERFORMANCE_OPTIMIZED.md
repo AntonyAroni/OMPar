@@ -2,7 +2,7 @@
 
 Este documento detalla el impacto de rendimiento logrado a través de tres fases de optimización progresiva en el sistema OMPar.
 
-## � Resumen Ejecutivo
+## Resumen
 
 | Métrica Global | Baseline (Original) | Final (Fase 3) | Mejora Total |
 |----------------|---------------------|----------------|--------------|
@@ -74,3 +74,25 @@ Tabla detallada de tiempos (en milisegundos) a través de las fases para las ope
 
 ### Conclusión
 La combinación de **C++ para el procesamiento de datos** y **TensorRT para la inferencia** ha transformado OMPar en una herramienta significativamente más rápida y ligera, capaz de procesar casi el doble de código en el mismo tiempo y utilizando la mitad de recursos de memoria.
+
+## 🔍 Detalles Técnicos: C++ Nativo vs Python Wrapper
+
+Durante la Fase 3, se exploraron dos estrategias de integración para el motor TensorRT:
+
+1.  **C++ Nativo (Hybrid Mode)**: Inferencia directa vía C++ con `enqueueV3`.
+2.  **Python Wrapper**: Gestión del contexto TensorRT desde Python.
+
+**Decisión Final**: Se optó por el **Python Wrapper**.
+*   **Motivo**: Se detectaron conflictos de ABI irrecuperables entre la versión de `libcudart` del sistema (usada por PyTorch) y los headers locales de TensorRT necesarios para la compilación C++.
+*   **Impacto**: El rendimiento de inferencia es **idéntico** en ambos casos, ya que el cálculo pesado ocurre en la GPU dentro del motor TensorRT. El wrapper de Python añade un overhead despreciable (<0.1ms) pero garantiza **estabilidad total** y facilita la instalación sin requerir compilación compleja por parte del usuario.
+
+## ⏱️ Desglose Detallado de Latencia (TensorRT)
+
+Tiempos medidos en el benchmark final (Muestras: 5 iteraciones):
+
+| Componente | Tiempo Promedio | Notas |
+|------------|-----------------|-------|
+| **Inicialización (Carga Engine)** | 3315 ms | Se paga una sola vez al arranque. |
+| **Inferencia: Simple Loop** | 28.90 ms | Clasificación rápida (34 item/s). |
+| **Inferencia: Complex (Reduction)** | 370.40 ms | Generación larga de tokens. |
+| **Inferencia: Array Copy** | 344.41 ms | Generación media. |

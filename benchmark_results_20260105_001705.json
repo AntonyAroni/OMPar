@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-01-05T00:17:01.916598",
+  "device": "cuda",
+  "pytorch_version": "2.5.1+cu121",
+  "cuda_available": true,
+  "benchmarks": [
+    {
+      "name": "Simple loop",
+      "iterations": 5,
+      "code_length": 47,
+      "times": {
+        "mean_ms": 26.27073460025713,
+        "median_ms": 26.209793000816717,
+        "min_ms": 25.864694000119925,
+        "max_ms": 26.782019999700424,
+        "stdev_ms": 0.36335282608010233,
+        "p95_ms": 26.782019999700424,
+        "p99_ms": 26.782019999700424
+      },
+      "components": {
+        "classification_ms": {
+          "mean_ms": 26.058813000054215,
+          "min_ms": 25.032657999872754,
+          "max_ms": 26.7269119995035
+        },
+        "generation_ms": {
+          "mean_ms": 0,
+          "min_ms": 0,
+          "max_ms": 0
+        },
+        "formatting_ms": {
+          "mean_ms": 0,
+          "min_ms": 0,
+          "max_ms": 0
+        },
+        "total_ms": {
+          "mean_ms": 26.058813000054215,
+          "min_ms": 25.032657999872754,
+          "max_ms": 26.7269119995035
+        }
+      },
+      "throughput": {
+        "iterations_per_second": 38.06517081521628,
+        "ms_per_iteration": 26.27073460025713
+      }
+    }
+  ],
+  "initialization_time_ms": 3461.0297030003494,
+  "batch_benchmark": {
+    "batch_size": 4,
+    "successful": 0,
+    "total_time_ms": 2.159224000024551,
+    "avg_time_per_item_ms": 0,
+    "throughput_items_per_second": 0.0
+  }
+}

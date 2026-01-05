@@ -25,13 +25,9 @@ class OMPAR:
         self.tokenizer_gen = GPT2Tokenizer(vocab_file=args.vocab_file, merges_file=args.merge_file, model_input_names=['input_ids'])
 
         if self.use_tensorrt:
-            try:
-                from cpp_extensions.monocoder_tensorrt.monocoder_trt import MonoCoderTRT
-                self.model_gen = MonoCoderTRT("cpp_extensions/monocoder_tensorrt/monocoder_fixed.engine")
-                print("✅ MonoCoder: TensorRT activado (Máximo rendimiento)")
-            except Exception as e:
-                print(f"⚠️  Error cargando TensorRT: {e}. Usando PyTorch...")
-                self.use_tensorrt = False
+            from cpp_extensions.monocoder_tensorrt.monocoder_trt import MonoCoderTRT
+            self.model_gen = MonoCoderTRT("cpp_extensions/monocoder_tensorrt/monocoder_fixed.engine")
+            print("✅ MonoCoder: TensorRT activado (Python Wrapper)")
                 
         if not self.use_tensorrt:
             self.model_gen = GPTNeoXForCausalLM.from_pretrained('MonoCoder/MonoCoder_OMP', use_safetensors=True).to(device)
@@ -74,10 +70,7 @@ class OMPAR:
 
         return pragma        
 
-    def gen_par(self, loop) -> str:
-        """
-        Generate OMP pragma
-        """
+
     def gen_par(self, loop) -> str:
         """
         Generate OMP pragma
