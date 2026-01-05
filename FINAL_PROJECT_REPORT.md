@@ -15,49 +15,94 @@ El objetivo principal es tomar código fuente serial escrito en C/C++ y, mediant
 Este informe documenta la transformación del proyecto desde un prototipo académico en Python hasta una **herramienta de producción de alto rendimiento**, lograda a través de una reingeniería profunda y optimización por hardware.
 
 ---
-
 ## 2. 🏗️ Arquitectura del Sistema
 
-El sistema opera mediante un pipeline secuencial de tres etapas críticas, cada una optimizada para minimizar la latencia.
-
-```mermaid
-graph TD
-    Input["Código Fuente C/C++"] --> A
-
-    subgraph "Etapa 1: Análisis Estático (CPU)"
-        A["Parser & DFG Extractor"] -->|AST + Data Flow| B["Representación Intermedia"]
-        style A fill:#ff9900,stroke:#333,stroke-width:2px
-    end
-
-    subgraph "Etapa 2: Inteligencia Artificial (GPU)"
-        B --> C{OMPify: Clasificador}
-        C -->|Serial| End["Fin - No Paralelizable"]
-        C -->|Paralelizable| D["MonoCoder: Generador"]
-        style C fill:#99ccff,stroke:#333
-        style D fill:#66ff66,stroke:#333,stroke-width:2px
-    end
-
-    subgraph "Etapa 3: Post-Procesamiento"
-        D -->|Tokens| E["Decodificador & Formateador"]
-        E --> Output["Código Paralelizado #pragma omp"]
-    end
-```
-
-### Componentes Principales
-
-1.  **DFG Extractor (Data Flow Graph)**
-    *   **Función**: Analiza sintácticamente el código para entender las dependencias de variables (lectura/escritura) y asegurar que la paralelización sea segura (thread-safe).
-    *   **Tecnología**: Originalmente Python, reescrito completamente en **C++** usando `tree-sitter`.
-
-2.  **OMPify (El "Cerebro" Discriminador)**
-    *   **Función**: Un modelo basado en **GraphCodeBERT** que examina el código y el grafo de flujo de datos para predecir *si* un bucle necesita paralelización y *qué tipo* (privatización de variables, reducción, etc.).
-    *   **Optimización**: Ejecución en GPU con tensores optimizados.
-
-3.  **MonoCoder (El "Escritor" Generátivo)**
-    *   **Función**: Un modelo de lenguaje grande (LLM) basado en **GPT-NeoX (160M)** que escribe el texto exacto del pragma OpenMP.
-    *   **Optimización Final**: Motor de inferencia **NVIDIA TensorRT** con cuantización FP16.
+El sistema OMPar opera mediante un **pipeline secuencial de tres etapas críticas**, diseñado para minimizar la latencia total y maximizar el throughput. Cada etapa transforma progresivamente el código fuente hasta producir una versión paralelizada y semánticamente equivalente.
 
 ---
+
+### 2.1 Entrada del Sistema
+
+- **Entrada**: Código fuente serial escrito en **C/C++**.
+- El código es analizado función por función, con especial énfasis en bucles (`for`, `while`) candidatos a paralelización.
+
+---
+
+### 2.2 Etapa 1: Análisis Estático (CPU)
+
+Esta etapa se ejecuta completamente en **CPU** y tiene como objetivo comprender la estructura y las dependencias del código.
+
+**Componentes:**
+
+- **Parser**
+  - Construye el **Árbol de Sintaxis Abstracta (AST)** del código fuente.
+- **DFG Extractor (Data Flow Graph)**
+  - Analiza las dependencias de datos (lectura y escritura de variables).
+  - Detecta posibles *data races* y dependencias que impedirían la ejecución paralela.
+
+**Salida:**
+
+- Una **representación intermedia** que combina:
+  - Información sintáctica (AST).
+  - Información semántica y de dependencias (Data Flow).
+
+---
+
+### 2.3 Etapa 2: Inteligencia Artificial (GPU)
+
+Esta etapa se ejecuta en **GPU** y constituye el núcleo de decisión y generación del sistema.
+
+#### 2.3.1 OMPify: Clasificador
+
+- Modelo discriminativo basado en **GraphCodeBERT**.
+- Evalúa la representación intermedia y determina:
+  - Si un bucle es **paralelizable** o **no paralelizable**.
+  - El tipo de paralelización requerida (privatización de variables, reducciones, etc.).
+
+**Resultados posibles:**
+
+- **No paralelizable**  
+  → El pipeline termina y el código se devuelve sin modificaciones.
+- **Paralelizable**  
+  → El flujo continúa hacia el generador.
+
+#### 2.3.2 MonoCoder: Generador
+
+- Modelo generativo basado en **GPT-NeoX (160M)**.
+- Produce el texto exacto de las directivas **OpenMP (`#pragma omp ...`)** necesarias.
+- La generación se realiza token a token, optimizada para baja latencia.
+
+**Salida:**
+
+- Secuencia de tokens que representan las directivas OpenMP.
+
+---
+
+### 2.4 Etapa 3: Post-Procesamiento
+
+Esta etapa convierte la salida del modelo generativo en código fuente final listo para su uso.
+
+**Componentes:**
+
+- **Decodificador**
+  - Convierte los tokens generados en texto legible.
+- **Formateador**
+  - Inserta las directivas OpenMP en las posiciones correctas del código.
+  - Respeta el estilo original del código fuente.
+
+**Salida Final:**
+
+- **Código C/C++ paralelizado**, con directivas `#pragma omp` correctamente integradas.
+
+---
+
+### 2.5 Flujo Resumido del Pipeline
+
+1. Entrada de código fuente C/C++.
+2. Análisis estático y extracción de dependencias (CPU).
+3. Clasificación de paralelización y generación de directivas (GPU).
+4. Decodificación, formateo y salida de código paralelizado.
+
 
 ## 3. 🛠️ Tecnologías e Infraestructura
 
